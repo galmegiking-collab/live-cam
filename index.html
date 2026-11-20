@@ -38,6 +38,7 @@
   .play-video { flex: 1; position: relative; background: #000; }
   .play-video iframe { width: 100%; height: 100%; border: none; }
   .play-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: var(--muted); }
+  .fallback-hint { position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 10px; font-size: 11px; color: #aaa; background: rgba(0,0,0,0.55); text-align: center; pointer-events: none; }
   .play-placeholder .big-icon { font-size: 48px; }
 
   /* 유튜브 연결 안내 화면 */
@@ -98,6 +99,7 @@ const categories = [
   { id: 'newyork', label: '🗽 뉴욕' },
   { id: 'usa', label: '🇺🇸 미국' },
   { id: 'europe', label: '🌍 유럽' },
+  { id: 'korea', label: '🇰🇷 서울' },
   { id: 'tokyo', label: '🏯 도쿄' },
   { id: 'space', label: '🚀 우주' },
   { id: 'nature', label: '🌿 자연' },
@@ -105,32 +107,37 @@ const categories = [
 
 const cams = [
   { cat: 'special', title: '🌐 전세계 1200개 라이브캠', loc: 'Worldwide · SkylineWebcams', vid: 'EFum1rGUdkk', ytOnly: true },
-  { cat: 'newyork', title: '🗽 타임스퀘어 (EarthCam)', loc: 'New York, USA', vid: 'z-jYdOIKcTQ' },
-  { cat: 'newyork', title: '🗽 타임스퀘어 Duffy 4K', loc: 'New York, USA', vid: 'iiBTWU2FyFo' },
-  { cat: 'newyork', title: '🗽 타임스퀘어 미드타운', loc: 'New York, USA', vid: 'lM3khCaiDos' },
+  { cat: 'newyork', title: '🗽 타임스퀘어 크로스로드', loc: 'New York, USA', vid: 'KHy_n-EMWY8' },
+  { cat: 'newyork', title: '🗽 타임스퀘어 노스 4K', loc: 'New York, USA', vid: 'ZxCeWQ3Lcig' },
+  { cat: 'newyork', title: '🗽 자유의 여신상', loc: 'New York, USA', vid: 'o5Ie_LpZ9uk' },
+  { cat: 'newyork', title: '🌉 브루클린 브리지', loc: 'New York, USA', vid: 'tErYxn2UM5Y' },
   { cat: 'newyork', title: '🏙️ 코니아일랜드', loc: 'New York, USA', vid: 'H67j7H-7QD0' },
   { cat: 'newyork', title: '🏙️ 원 밴더빌트 전망대', loc: 'New York, USA', vid: '2_PDaUJbfuI' },
   { cat: 'usa', title: '🌊 LA 베니스비치', loc: 'Los Angeles, USA', vid: 'EO_1LWqsCNE' },
+  { cat: 'usa', title: '🌉 샌프란시스코 금문교 뷰', loc: 'San Francisco, USA', vid: 'BSWhGNXxT9A' },
   { cat: 'usa', title: '💧 나이아가라 폭포', loc: 'Niagara Falls, Canada', vid: 'qx7gry390YA' },
-  { cat: 'usa', title: '🎸 내슈빌 브로드웨이', loc: 'Nashville, USA', vid: 'h5Grd2w7HQM' },
+  { cat: 'usa', title: '🎸 내슈빌 브로드웨이', loc: 'Nashville, USA', vid: 'ICva1RPK6Do' },
   { cat: 'usa', title: '🏙️ 시카고 스카이덱', loc: 'Chicago, USA', vid: 'O0UGT7AT3aw' },
-  { cat: 'usa', title: '🏙️ 시카고 파워하우스', loc: 'Chicago, USA', vid: '6M6rK0ssjYg' },
-  { cat: 'usa', title: '🏛️ 워싱턴 기념비', loc: 'Washington D.C., USA', vid: 'oDCAAfOSqvA' },
-  { cat: 'usa', title: '🏟️ 라스베가스 스타디움', loc: 'Las Vegas, USA', vid: '_rmUXOHSf0w' },
-  { cat: 'europe', title: '🎵 런던 애비로드', loc: 'London, UK', vid: 'M3EYAY2MftI' },
+  { cat: 'usa', title: '🏛️ 워싱턴 기념비', loc: 'Washington D.C., USA', vid: 'mG2gAWY_Guw' },
+  { cat: 'europe', title: '🎵 런던 애비로드', loc: 'London, UK', vid: 'zMCea32gpmg' },
+  { cat: 'europe', title: '🌉 런던 브리지 & 템스강', loc: 'London, UK', vid: 'MXmzsjABC-U' },
   { cat: 'europe', title: '⛪ 바티칸 성 베드로 광장', loc: 'Vatican City', vid: '03pYP2Nmreo' },
-  { cat: 'europe', title: '🗼 파리 에펠탑 뷰', loc: 'Paris, France', vid: 'OzYp4NRZlwQ' },
+  { cat: 'europe', title: '🗼 파리 에펠탑 뷰', loc: 'Paris, France', vid: 'QI-PPEW2Bgc' },
+  { cat: 'korea', title: '🏯 경복궁 광화문', loc: 'Seoul, Korea', vid: 'IcTMxC_k57A' },
+  { cat: 'korea', title: '🚉 서울역 광장', loc: 'Seoul, Korea', vid: 'C3hW1VrwmNc' },
+  { cat: 'korea', title: '🎤 홍대 거리', loc: 'Seoul, Korea', vid: 'yzxiAJAXXtQ' },
+  { cat: 'korea', title: '🌉 서울 한강 스카이라인', loc: 'Seoul, Korea', vid: 'vk5BHoDxXf0' },
   { cat: 'tokyo', title: '🏙️ 시부야 스크램블 (FNN)', loc: 'Tokyo, Japan', vid: 'dfVK7ld38Ys' },
-  { cat: 'tokyo', title: '🏙️ 시부야 스크램블 (TV아사히)', loc: 'Tokyo, Japan', vid: '8H3nRCFVR6Y' },
+  { cat: 'tokyo', title: '🏙️ 시부야 스크램블 (TV아사히)', loc: 'Tokyo, Japan', vid: '5B4LmH4JbnY' },
   { cat: 'tokyo', title: '🌃 신주쿠 가부키초', loc: 'Tokyo, Japan', vid: 'DjdUEyjx8GM' },
   { cat: 'tokyo', title: '🌃 가부키초 II', loc: 'Tokyo, Japan', vid: 'gFRtAAmiFbE' },
   { cat: 'tokyo', title: '🌃 신주쿠 세이부 앞', loc: 'Tokyo, Japan', vid: 'lA6TaaMGgDo' },
   { cat: 'tokyo', title: '🐱 신주쿠 고양이 시점', loc: 'Tokyo, Japan', vid: 'Zhmmh7l6KEw' },
-  { cat: 'space', title: '🚀 NASA ISS 지구 라이브', loc: 'ISS', vid: 'vytmBNhc9ig' },
+  { cat: 'space', title: '🚀 NASA 공식 ISS HD 라이브', loc: 'NASA, USA', vid: 'ROboUHfPUrU' },
+  { cat: 'space', title: '🌍 NASA 공식 ISS 스트림', loc: 'NASA, USA', vid: 'M3HKLzjvKPc' },
   { cat: 'space', title: '🛸 ISS 궤도 트래커', loc: 'ISS', vid: 'TAkk2B9GOmc' },
-  { cat: 'space', title: '🌍 NASA 공식 ISS 스트림', loc: 'NASA, USA', vid: 'uwXgcTc8oY8' },
   { cat: 'space', title: '🌏 Sen 4K 지구 영상', loc: 'ISS', vid: 'fO9e9jnhYK8' },
-  { cat: 'space', title: '🚀 ISS Dream Trips', loc: 'ISS', vid: '0FBiyFpV__g' },
+  { cat: 'space', title: '🚀 ISS Dream Trips', loc: 'ISS', vid: '4QJEibrt9B8' },
   { cat: 'nature', title: '🐘 아프리카 Nkorho 부시', loc: 'South Africa', vid: 'dIChLG4_WNs' },
   { cat: 'nature', title: '🦁 케냐 야생동물', loc: 'Kenya', vid: 'XsOU8JnEpNM' },
   { cat: 'nature', title: '🏜️ 나미비아 사막', loc: 'Namibia', vid: 'ydYDqZQpim8' },
@@ -169,7 +176,8 @@ function playCam(idx) {
   } else {
     document.getElementById('playVideo').innerHTML = `
       <iframe src="https://www.youtube.com/embed/${cam.vid}?autoplay=1&rel=0"
-        allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
+        allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+      <div class="fallback-hint">화면이 안 나오면 오른쪽 아래 <b>▶ YouTube</b> 버튼을 눌러주세요</div>`;
   }
   renderList();
 }
